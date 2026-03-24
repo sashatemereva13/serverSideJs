@@ -19,4 +19,20 @@ const getStudents = (req, res) => {
   }
 };
 
+const createStudent = (req, res) => {
+  try {
+    const newStudent = req.body;
+
+    console.log("Incoming data:", newStudent);
+
+    res.status(201).json({
+      message: "Student received successfully",
+      data: newStudent,
+    });
+  } catch (error) {
+    res.status(400).json({ error: "Invalid data" });
+  }
+};
+
 export { getStudents };
+export { createStudent };
