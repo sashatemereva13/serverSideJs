@@ -1,4 +1,4 @@
-const BACKEND_URL = "http://localhost:3000";
+const BACKEND_URL = "http://localhost:3001";
 
 const fetchStudents = async () => {
   const response = await fetch(`${BACKEND_URL}/students`);
