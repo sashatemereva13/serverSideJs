@@ -1,14 +1,23 @@
-const express = require("express")
-const app = express()
-const port = 3000
+import express from "express";
+import cors from "cors";
+import router from "./solution/routes.js";
 
+const app = express();
+const port = 3000;
+
+app.use(cors());
+app.use(express.json());
+
+// routes
 app.get("/", (req, res) => {
-	res.json({ msg: "Hello World!" })
-})
+  res.json({ msg: "Hello World!" });
+});
+
+app.use("/", router);
 
 app.listen(port, () => {
-	console.log(`Example app listening on port ${port}`)
-})
+  console.log(`Example app listening on port ${port}`);
+});
 
 // NODEMON
 
@@ -20,6 +29,7 @@ app.listen(port, () => {
 // POST - create new data
 // PUT - update existing data
 // DELETE - remove data
+
 // CRUD - create, read, update, delete
 
 // SEND DATA vs SEND ERROR
