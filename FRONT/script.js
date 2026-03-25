@@ -1,7 +1,7 @@
 const BACKEND_URL = "http://localhost:3001";
 
 const fetchStudents = async () => {
-  const response = await fetch(`${BACKEND_URL}/students`);
+  const response = await fetch(`${BACKEND_URL}/api/students`);
   if (!response.ok) throw new Error(`Server error: ${response.status}`);
   const data = await response.json();
   // support both array responses and { students: [...] } shaped responses
