@@ -8,15 +8,16 @@ const __dirname = path.dirname(__filename);
 // load data
 const filePath = path.join(__dirname, "../students.json");
 
-const getStudents = (req, res) => {
-  try {
-    const studentsData = fs.readFileSync(filePath, "utf-8");
-    let students = JSON.parse(studentsData);
+let students = [];
+try {
+  const studentsData = fs.readFileSync(filePath, "utf-8");
+  students = JSON.parse(studentsData);
+} catch (error) {
+  students = [];
+}
 
-    res.status(200).json(students);
-  } catch (error) {
-    res.status(500).json({ error: "Failed to read students" });
-  }
+const getStudents = (req, res) => {
+  res.status(200).json(students);
 };
 
 const createStudent = (req, res) => {
@@ -24,6 +25,13 @@ const createStudent = (req, res) => {
     const newStudent = req.body;
 
     console.log("Incoming data:", newStudent);
+
+    newStudent.id = Date.now();
+
+    students.push(newStudent);
+
+    // persist to file
+    fs.writeFileSync(filePath, JSON.stringify(students, null, 2));
 
     res.status(201).json({
       message: "Student received successfully",
