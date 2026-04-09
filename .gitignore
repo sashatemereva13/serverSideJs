@@ -1,9 +1,12 @@
 BACK/solut
 
 BACK/node_modules
+BACK/.env
 
 /node_modules
 memory.md
+
+.env
 
 # Logs
 logs
