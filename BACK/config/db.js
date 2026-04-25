@@ -1,3 +1,6 @@
+// connect to MongoDB
+// stops if DB fails
+
 import mongoose from "mongoose";
 
 const connectDB = async () => {

@@ -1,71 +1,155 @@
+// receives HTTP request
+// calls service
+
 import {
   getAllStudents,
   getStudentById,
+  getPublicStudents,
   addStudent,
   updateStudent,
   deleteStudent,
+  registerStudent,
+  loginStudent,
+  updateProfile,
 } from "../services/studentsService.js";
+import { getCache, setCache } from "../utils/cache.js";
+
+const getPublicStudentsController = async (req, res, next) => {
+  try {
+    const result = await getPublicStudents(req.query);
+
+    res.json({
+      status: "success",
+      page: result.page,
+      limit: result.limit,
+      total: result.total,
+      pages: result.pages,
+      data: result.students,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
 
 // get all
-const getStudents = async (req, res) => {
+const getStudents = async (req, res, next) => {
   try {
-    const students = await getAllStudents();
-    res.json(students);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+    const cacheKey = `students:${JSON.stringify(req.query)}`;
+
+    const cached = await getCache(cacheKey);
+
+    if (cached) {
+      return res.json({
+        ...cached,
+        cached: true,
+      });
+    }
+
+    const result = await getAllStudents(req.query);
+
+    res.json({
+      status: "success",
+      page: result.page,
+      limit: result.limit,
+      total: result.total,
+      pages: result.pages,
+      data: result.students,
+    });
+
+    await setCache(cacheKey, response, 60);
+    res.json(response);
+  } catch (err) {
+    next(err);
   }
 };
 
 // get one
-const getStudent = async (req, res) => {
+const getStudent = async (req, res, next) => {
   try {
-    const student = getStudentById(req.params.id);
-    if (!student) return res.status(404).json({ error: "Not found" });
+    const student = await getStudentById(req.params.id);
 
     res.json(student);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+  } catch (err) {
+    next(err);
   }
 };
 
 // create one
-const createStudent = async (req, res) => {
+const createStudent = async (req, res, next) => {
   try {
-    const student = addStudent(req.body);
+    const student = await addStudent(req.body);
     res.status(201).json(student);
   } catch (err) {
-    res.status(500).json({ err: err.message });
+    next(err);
   }
 };
 
 // update one
-const updateStudentController = async (req, res) => {
+const updateStudentController = async (req, res, next) => {
   try {
-    const updated = updateStudent(req.params.id, req.body);
-    if (!updated) return res.status(404).json({ error: "Not found" });
-
+    const updated = await updateStudent(req.params.id, req.body);
     res.json(updated);
   } catch (err) {
-    res.status(500).json({ err: err.message });
+    next(err);
+  }
+};
+
+const updateProfileController = async (req, res, next) => {
+  try {
+    const updated = await updateProfile(req.params.id, req.body);
+
+    res.json({
+      status: "success",
+      data: updated,
+    });
+  } catch (err) {
+    next(err);
   }
 };
 
 // delete one
-const deleteStudentController = async (req, res) => {
+const deleteStudentController = async (req, res, next) => {
   try {
-    const deleted = deleteStudent(req.params.id);
-    if (!deleted) return res.status(404).json({ error: "Not found" });
+    const deleted = await deleteStudent(req.params.id);
 
-    res.json(deleted);
+    res.json({
+      message: "this student is deleted",
+      student: deleted,
+    });
   } catch (err) {
-    res.status(404).json({ err: err.message });
+    next(err);
+  }
+};
+
+// register
+const registerStudentController = async (req, res, next) => {
+  try {
+    const result = await registerStudent(req.body);
+    res.status(201).json(result);
+  } catch (err) {
+    console.log(err);
+    next(err);
+  }
+};
+
+// login
+const loginStudentController = async (req, res, next) => {
+  try {
+    const result = await loginStudent({ ...req.body, ip: req.ip });
+    res.json(result);
+  } catch (err) {
+    next(err);
   }
 };
 
 export {
+  getPublicStudentsController,
   getStudent,
   getStudents,
   createStudent,
   updateStudentController,
+  updateProfileController,
   deleteStudentController,
+  registerStudentController,
+  loginStudentController,
 };
