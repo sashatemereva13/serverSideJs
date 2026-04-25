@@ -2,6 +2,8 @@ BACK/solut
 
 BACK/node_modules
 BACK/.env
+BACK/public/uploads/*
+!BACK/public/uploads/.gitkeep
 
 /node_modules
 memory.md
