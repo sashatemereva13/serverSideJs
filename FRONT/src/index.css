@@ -1,0 +1,67 @@
+/* reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* base */
+body {
+  font-family:
+    system-ui,
+    -apple-system,
+    sans-serif;
+  background: #f7f7f8;
+  color: #111;
+  margin: 3rem 2rem;
+}
+
+/* layout */
+.container {
+  max-width: 900px;
+  margin: 60px auto;
+  padding: 20px;
+}
+
+/* card */
+.card {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+  margin-bottom: 20px;
+}
+
+/* inputs */
+input,
+textarea {
+  width: 100%;
+  padding: 12px;
+  margin-top: 10px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  font-size: 14px;
+}
+
+/* button */
+button {
+  margin-top: 15px;
+  padding: 12px;
+  border: none;
+  background: #111;
+  color: white;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+button:hover {
+  opacity: 0.9;
+}
+
+/* links */
+a {
+  display: inline-block;
+  margin-top: 10px;
+  color: #555;
+  font-size: 14px;
+}
