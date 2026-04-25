@@ -1,30 +1,35 @@
 import { useEffect, useState } from "react";
-import api from "../api";
+import { getStudents } from "../api/studentApi";
 import SearchBar from "../components/SearchBar";
 
 export default function Dashboard() {
   const [students, setStudents] = useState([]);
 
-  useEffect(() => {
-    fetchStudents();
-  }, []);
-
-  const fetchStudents = async () => {
+  const fetchStudents = async (searchQuery = "") => {
     try {
-      const res = await api.get("/students"); // public route
-      setStudents(res.data.data);
+      const res = await getStudents({
+        search: searchQuery,
+      });
+
+      setStudents(res.data.data.students);
     } catch (e) {
       console.log(e);
     }
   };
 
+  useEffect(() => {
+    fetchStudents();
+  }, []);
+
   return (
     <div className="container">
       <SearchBar onSearch={fetchStudents} />
+
       <h2>Students</h2>
+
       <div className="studentsGrid">
         {students.map((s) => (
-          <div key={s.id} className="studentCard">
+          <div key={s._id} className="studentCard">
             <h3>{s.name}</h3>
             <p className="email">{s.email}</p>
 
@@ -33,11 +38,13 @@ export default function Dashboard() {
                 <strong>Major:</strong> {s.major}
               </p>
             )}
+
             {s.gpa && (
               <p>
                 <strong>GPA:</strong> {s.gpa}
               </p>
             )}
+
             {s.bio && <p className="bio">{s.bio}</p>}
 
             {s.skills?.length > 0 && (
