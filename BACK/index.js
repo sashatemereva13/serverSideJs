@@ -9,6 +9,7 @@ import cors from "cors";
 import authRoutes from "./routes/authRoutes.js";
 import studentRoutes from "./routes/studentRoutes.js";
 import uploadRoutes from "./routes/uploadRoutes.js";
+import courseRoutes from "./routes/courseRoutes.js";
 
 import connectDB from "./config/db.js";
 
@@ -28,6 +29,7 @@ app.use(express.json());
 app.use(logger);
 app.use(express.static("public"));
 
+app.use("/api/courses", courseRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/students", studentRoutes);
 app.use("/api/upload", uploadRoutes);
