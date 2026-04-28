@@ -88,14 +88,14 @@ const getStudentById = async (id) => {
 };
 
 // create one
-const addStudent = async (data) => {
-  const newData = { ...data };
-
-  if (newData.email) {
-    newData.email = newData.email.toLowerCase().trim();
-  }
-
-  const student = new Student(newData);
+const addStudent = async ({ name, email, password, major, gpa }) => {
+  const student = new Student({
+    name,
+    email: email?.toLowerCase().trim(),
+    password,
+    major,
+    gpa,
+  });
 
   return await student.save();
 };
@@ -113,6 +113,12 @@ const updateStudent = async (id, data) => {
   if (!updatedStudent) {
     throw new NotFoundError("student not found");
   }
+
+  if (updatedData.name !== undefined) updatedStudent.name = updatedData.name;
+  if (updatedData.email !== undefined)
+    updatedStudent.email = updatedData.email.toLowerCase().trim();
+  if (updatedData.major !== undefined) updatedStudent.major = updatedData.major;
+  if (updatedData.gpa !== undefined) updatedStudent.gpa = updatedData.gpa;
 
   Object.assign(updatedStudent, updatedData);
 
@@ -235,6 +241,7 @@ const loginStudent = async ({ email, password, ip }) => {
   const isMatch = await bcrypt.compare(password, student.password);
 
   if (!isMatch) {
+    await checkLoginAttempts(key, true);
     throw new UnauthorizedError("invalid credentials");
   }
 
