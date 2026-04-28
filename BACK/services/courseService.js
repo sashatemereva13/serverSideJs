@@ -1,4 +1,4 @@
-import Courses from "../models/Courses";
+import Courses from "../models/Courses.js";
 
 export const getCourses = () => Courses.find();
 export const getCourseById = (id) => Courses.findById(id);
