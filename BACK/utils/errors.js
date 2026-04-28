@@ -13,7 +13,7 @@ class BadRequestError extends AppError {
 
 class UnauthorizedError extends AppError {
   constructor(message = "Not found") {
-    super(message, 404);
+    super(message, 401);
   }
 }
 
