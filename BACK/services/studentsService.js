@@ -11,6 +11,7 @@ import {
 
 import {
   checkLoginAttempts,
+  incrementLoginAttempts,
   resetLoginAttempts,
 } from "../utils/rateLimiter.js";
 
@@ -218,7 +219,6 @@ const registerStudent = async ({ name, email, password, major, gpa }) => {
 // login one
 const loginStudent = async ({ email, password, ip }) => {
   const normalizedEmail = email.toLowerCase().trim();
-
   const key = `login:${normalizedEmail}:${ip}`;
 
   const rateLimit = await checkLoginAttempts(key);
@@ -235,13 +235,14 @@ const loginStudent = async ({ email, password, ip }) => {
 
   // don't reveal whether the email exists
   if (!student) {
+    await incrementLoginAttempts(key);
     throw new UnauthorizedError("invalid credentials");
   }
 
   const isMatch = await bcrypt.compare(password, student.password);
 
   if (!isMatch) {
-    await checkLoginAttempts(key, true);
+    await incrementLoginAttempts(key);
     throw new UnauthorizedError("invalid credentials");
   }
 
