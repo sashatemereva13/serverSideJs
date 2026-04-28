@@ -22,7 +22,7 @@ const authMiddleware = async (req, res, next) => {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
     // fetch the user from DB
-    const user = await Student.findById(decoded.id).select("-password");
+    const user = await Student.findById(decoded.sub).select("-password");
 
     if (!user) {
       throw new UnauthorizedError("User no longer exists");
