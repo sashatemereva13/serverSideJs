@@ -47,16 +47,17 @@ const getStudents = async (req, res, next) => {
 
     const result = await getAllStudents(req.query);
 
-    res.json({
+    const response = {
       status: "success",
       page: result.page,
       limit: result.limit,
       total: result.total,
       pages: result.pages,
       data: result.students,
-    });
+    };
 
     await setCache(cacheKey, response, 60);
+
     res.json(response);
   } catch (err) {
     next(err);
@@ -87,7 +88,7 @@ const createStudent = async (req, res, next) => {
 // update one
 const updateStudentController = async (req, res, next) => {
   try {
-    const updated = await updateStudent(req.params.id, req.body);
+    const updated = await updateStudent(req.user.id, req.body);
     res.json(updated);
   } catch (err) {
     next(err);
@@ -124,10 +125,12 @@ const deleteStudentController = async (req, res, next) => {
 // register
 const registerStudentController = async (req, res, next) => {
   try {
-    const result = await registerStudent(req.body);
+    const { name, email, password, major, gpa } = req.body;
+
+    const result = await registerStudent({ name, email, password, major, gpa });
+
     res.status(201).json(result);
   } catch (err) {
-    console.log(err);
     next(err);
   }
 };
